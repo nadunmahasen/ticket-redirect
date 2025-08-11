@@ -1,0 +1,64 @@
+<!-- chat.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket Assistant Agent Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Style the iframe to fill the container and look good on all devices */
+        #copilot-iframe {
+            width: 100%;
+            height: 80vh; /* Adjust height as needed */
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="p-4">
+
+    <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">Ticket Assistant</h1>
+    
+    <!-- The iframe where your Copilot Studio agent will be embedded -->
+    <!--
+      IMPORTANT: You need to replace the `src` URL with your actual Copilot Studio embed URL.
+      You can get this from the "Publish" section in Copilot Studio.
+    -->
+    <iframe id="copilot-iframe" src="YOUR_COPILOT_STUDIO_EMBED_URL" title="Copilot Studio Chatbot"></iframe>
+
+    <script>
+        // Listen for messages from other windows (like our ticket-success.html page).
+        window.addEventListener('message', (event) => {
+            // Check if the message is from a trusted origin (optional but recommended).
+            // For this example, we'll allow all origins using '*'.
+            // You can replace '*' with your website's domain for better security.
+
+            // Check the message content to see if it's our "purchase-complete" signal.
+            if (event.data && event.data.type === 'purchase-complete') {
+                console.log('Received purchase-complete message from another window.');
+
+                // Now, get a reference to the iframe and the Copilot Studio agent within it.
+                const iframe = document.getElementById('copilot-iframe');
+                if (iframe && iframe.contentWindow) {
+                    // Send a message directly to the Copilot Studio iframe's window.
+                    // This is how we trigger the "Welcome Back" topic.
+                    iframe.contentWindow.postMessage(
+                        {
+                            type: 'send',
+                            value: '_purchase_complete_', // The trigger phrase for your Copilot topic.
+                        },
+                        '*'
+                    );
+                    console.log('Sent message to Copilot Studio iframe.');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

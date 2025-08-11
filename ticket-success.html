@@ -1,0 +1,50 @@
+<!-- ticket-success.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Successful</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 rounded-lg shadow-xl text-center max-w-sm w-full">
+        <h1 class="text-3xl font-bold text-green-600 mb-4 animate-bounce">
+            Success!
+        </h1>
+        <p class="text-gray-700 text-lg">
+            Your ticket purchase was successful.
+        </p>
+        <p class="text-gray-500 text-sm mt-2">
+            You will be redirected back to the chat.
+        </p>
+    </div>
+
+    <script>
+        // This script is the key to sending a message back to the Copilot Studio chat page.
+        // It posts a message to the parent window (the chat page that opened this one).
+
+        // Get a reference to the parent window.
+        const parentWindow = window.opener || window.parent;
+
+        if (parentWindow) {
+            // Post a message to the parent window with a specific signal.
+            // This signal will be "heard" by the JavaScript in our chat.html page.
+            parentWindow.postMessage({
+                type: 'purchase-complete',
+            }, '*'); // The '*' allows messages to be sent to any origin.
+        }
+
+        // After sending the message, we can close this window.
+        setTimeout(() => {
+            window.close();
+        }, 3000); // Closes the window after 3 seconds.
+    </script>
+</body>
+</html>
